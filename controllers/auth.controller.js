@@ -2,17 +2,21 @@ const db = require("../models")
 const config = require("../config/auth.config")
 const User = db.user
 
-const jwt = require('jsonwebtoken')
-const jwtBlacklist = require('jwt-blacklist')
+const jwt = require('jsonwebtoken');
+const jwtBlacklist = require('jwt-blacklist');
 
 exports.signout = function (req, res) {
-    jwtBlacklist.blacklist(req.header.token)
-
-    jwtBlacklist.verify(req.header.token) // throw error
+    const token = req.headers.token
+    // let token = jwtBlacklist.sign({
+    //     feeling: 'awesome'
+    // }, 'secret', { expiresIn: '2h' });
+    // jwtBlacklist; // destroy the token
+    // jwtBlacklist.signut; // throw error token expired or destroyed
+    res.send('okk + ' + token)
 }
 
-
 exports.signin = (req, res) => {
+    console.log(req.body)
     User.findOne({
         where: {
             username: req.body.username
@@ -33,24 +37,24 @@ exports.signin = (req, res) => {
                 expiresIn: 86400 // 24 hours
             })
 
-            user.getRoles().then(roles_arg => {
-                res.setHeader('token', token)
+            user.getRole().then(roles_arg => {
+                // res.setHeader('token', token)
                 res.status(200).send({
                     id: user.id,
                     username: user.username,
-                    roles: { 'id': roles_arg.id, 'role': roles_arg.name },
-                    // req_tes: "tes + " + req.header,
+                    role: { 'id': roles_arg.id, 'role': roles_arg.name },
                     accessToken: token
                 })
             })
             // console.log(req)
         })
         .catch(err => {
-            if (req.body.username !== 'undefined' || req.body.password !== 'undefined') {
-                return res.json({
-                    message: "Field not completely filled "
-                })
-            }
+            // if (req.body.username !== 'undefined' || req.body.password !== 'undefined') {
+            //     return res.json({
+            //         message: "Field not completely filled "
+            //     })
+            // }
             res.status(500).send({ message: err.message })
         })
+
 }

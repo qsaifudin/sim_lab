@@ -17,6 +17,8 @@ db.sequelize.sync();
 // Routing
 require('./routes/auth.route')(app)
 require('./routes/user.route')(app)
+require('./routes/wilayah.route')(app)
+require('./routes/master-kategori.route')(app)
 app.listen(3003, () => console.log(`http://localhost:3003`))
 
 

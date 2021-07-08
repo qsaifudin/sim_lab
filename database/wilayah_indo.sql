@@ -27,8 +27,8 @@
 --
 
 CREATE TABLE IF NOT EXISTS wilayah_desa (
-  id varchar(10) NOT NULL,
-  kecamatan_id varchar(7) DEFAULT NULL,
+  id bigint NOT NULL,
+  kecamatan_id bigint DEFAULT NULL,
   nama varchar(40) DEFAULT NULL,
   PRIMARY KEY (id)
 ) ;
@@ -79809,8 +79809,8 @@ INSERT INTO wilayah_desa (id, kecamatan_id, nama) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS wilayah_kabupaten (
-  id varchar(4) NOT NULL,
-  provinsi_id varchar(2) NOT NULL DEFAULT '',
+  id bigint NOT NULL,
+  provinsi_id bigint NOT NULL,
   nama varchar(30) NOT NULL,
   PRIMARY KEY (id)
 );
@@ -80327,8 +80327,8 @@ INSERT INTO wilayah_kabupaten (id, provinsi_id, nama) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS wilayah_kecamatan (
-  id varchar(7) NOT NULL,
-  kabupaten_id varchar(4) NOT NULL DEFAULT '',
+  id bigint NOT NULL,
+  kabupaten_id bigint NOT NULL,
   nama varchar(30) NOT NULL,
   PRIMARY KEY (id)
 );
@@ -87228,7 +87228,7 @@ INSERT INTO wilayah_kecamatan (id, kabupaten_id, nama) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS wilayah_provinsi (
-  id varchar(2) NOT NULL,
+  id bigint NOT NULL,
   nama varchar(30) NOT NULL,
   PRIMARY KEY (id)
 );

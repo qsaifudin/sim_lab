@@ -1,10 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
-    const Role = sequelize.define("role", {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true
+    const Auth = sequelize.define('auth', {
+        user_id: {
+            type: Sequelize.INTEGER
         },
-        name: {
+        token: {
             type: Sequelize.STRING
         }
     }, {
@@ -13,5 +12,5 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: false,
     })
 
-    return Role;
+    return Auth;
 }

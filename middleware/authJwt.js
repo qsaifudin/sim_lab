@@ -26,7 +26,7 @@ verifyToken = (req, res, next) => {
 
 isSuperAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
+        user.getRole().then(roles => {
             if (roles.name === "superadmin") {
                 next();
                 return;
@@ -41,7 +41,7 @@ isSuperAdmin = (req, res, next) => {
 
 isAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
+        user.getRole().then(roles => {
             if (roles.name === "admin") {
                 next();
                 return;
@@ -56,7 +56,7 @@ isAdmin = (req, res, next) => {
 
 isVendor = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
+        user.getRole().then(roles => {
             if (roles.name === "vendor") {
                 next();
                 return;
@@ -70,7 +70,7 @@ isVendor = (req, res, next) => {
 
 isRs = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
+        user.getRole().then(roles => {
             if (roles.name === "rs") {
                 next();
                 return;
@@ -84,7 +84,7 @@ isRs = (req, res, next) => {
 
 isLab = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
+        user.getRole().then(roles => {
             if (roles.name === "lab") {
                 next();
                 return;
