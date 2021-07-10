@@ -20,13 +20,14 @@ verifyToken = (req, res, next) => {
             });
         }
         req.userId = decoded.id;
+        req.username = decoded.username;
         next();
     });
 };
 
 isSuperAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRole().then(roles => {
+        user.getRoles().then(roles => {
             if (roles.name === "superadmin") {
                 next();
                 return;
@@ -41,8 +42,8 @@ isSuperAdmin = (req, res, next) => {
 
 isAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRole().then(roles => {
-            if (roles.name === "admin") {
+        user.getRoles().then(roles => {
+            if (roles.name === "admin" || roles.name === "superadmin") {
                 next();
                 return;
             }
@@ -56,7 +57,7 @@ isAdmin = (req, res, next) => {
 
 isVendor = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRole().then(roles => {
+        user.getRoles().then(roles => {
             if (roles.name === "vendor") {
                 next();
                 return;
@@ -70,7 +71,7 @@ isVendor = (req, res, next) => {
 
 isRs = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRole().then(roles => {
+        user.getRoles().then(roles => {
             if (roles.name === "rs") {
                 next();
                 return;
@@ -84,7 +85,7 @@ isRs = (req, res, next) => {
 
 isLab = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
-        user.getRole().then(roles => {
+        user.getRoles().then(roles => {
             if (roles.name === "lab") {
                 next();
                 return;

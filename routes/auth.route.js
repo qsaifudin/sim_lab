@@ -9,5 +9,5 @@ module.exports = (app) => {
         next()
     })
     app.post('/signin', controller.signin)
-    app.delete('/signout', controller.signout)
+    app.put('/signout', controller.signout)
 }

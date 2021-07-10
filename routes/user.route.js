@@ -19,7 +19,7 @@ module.exports = app => {
     )
     app.get(
         '/page/admin',
-        [authJwt.verifyToken, [authJwt.isAdmin]],
+        [authJwt.verifyToken, authJwt.isAdmin, authJwt.isSuperAdmin],
         controller.adminBoard
     )
     app.get(

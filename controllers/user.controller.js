@@ -3,10 +3,11 @@ module.exports = {
         res.status(200).send("Public Content.")
     },
     superAdminBoard: (req, res) => {
-        res.status(200).send("Super Admin Content.")
+        // console.log(req)
+        res.status(200).json({ message: "Page Super Admin.", id: req.userId, username: req.username })
     },
     adminBoard: (req, res) => {
-        res.status(200).send("Admin Content.")
+        res.status(200).send({ message: "Page Admin .", id: req.userId, username: req.username })
     },
     vendorBoard: (req, res) => {
         res.status(200).send("vendor Content.")
