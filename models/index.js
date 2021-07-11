@@ -44,22 +44,28 @@ db.sequelize = sequelize;
 db.QueryTypes = QueryTypes;
 
 db.user = require('../models/user.model')(sequelize, Sequelize);
-db.auth = require('../models/auth.model')(sequelize, Sequelize);
 db.role = require('../models/role.model')(sequelize, Sequelize);
 db.provinsi = require('../models/provinsi.model')(sequelize, Sequelize);
 db.kabupaten = require('../models/kabupaten.model')(sequelize, Sequelize);
 db.kecamatan = require('../models/kecamatan.model')(sequelize, Sequelize);
 db.kategoriRs = require('../models/kategori_rs.model')(sequelize, Sequelize);
+db.refreshToken = require('../models/refreshToken.model')(sequelize, Sequelize);
 
-db.role.hasMany(db.user, {
-    as: "users"
-})
+// db.role.hasOne(db.user, {
+//     as: "users"
+// })
 
 db.user.belongsTo(db.role, {
     foreignKey: "roleId",
     as: "roles"
 })
 
+db.refreshToken.belongsTo(db.user, {
+    foreignKey: 'userId', targetKey: 'id'
+});
+db.user.hasOne(db.refreshToken, {
+    foreignKey: 'userId', targetKey: 'id'
+});
 
 db.ROLES = ["superadmin", "admin", "vendor", "rs", "lab"]
 

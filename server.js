@@ -14,14 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 const db = require('./models')
 db.sequelize.sync();
 
-// Routing
-require('./routes/auth.route')(app)
-require('./routes/user.route')(app)
-require('./routes/wilayah.route')(app)
-require('./routes/master-kategori.route')(app)
-app.listen(3003, () => console.log(`http://localhost:3003`))
-
-
 
 // force: true will drop the table if it already exists
 // db.sequelize.sync({ force: true })
@@ -53,3 +45,13 @@ app.listen(3003, () => console.log(`http://localhost:3003`))
 //         name: "lab"
 //     });
 // }
+
+
+// Routing
+require('./routes/auth.route')(app)
+require('./routes/user.route')(app)
+require('./routes/wilayah.route')(app)
+require('./routes/master-kategori.route')(app)
+app.listen(3003, () => console.log(`http://localhost:3003`))
+
+

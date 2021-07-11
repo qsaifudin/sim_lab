@@ -1,21 +1,18 @@
 const db = require("../models")
 const config = require("../config/auth.config")
-const User = db.user
+const { user: User, role: Role, refreshToken: RefreshToken } = db;
 
 const jwt = require('jsonwebtoken');
 const jwtBlacklist = require('jwt-blacklist');
 
 module.exports = {
-    getUser: (req, res) => {
-
-    },
     signin: (req, res) => {
         User.findOne({
             where: {
                 username: req.body.username
             }
         })
-            .then((user) => {
+            .then(async (user) => {
                 if (!user) {
                     return res.status(404).send({ message: "User Not found." })
                 }
@@ -27,51 +24,80 @@ module.exports = {
                 }
 
                 const token = jwt.sign({ id: user.id, username: user.username }, config.secret, {
-                    expiresIn: 86400
+                    expiresIn: config.jwtExpiration
                 })
 
-                db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
+                // let refreshToken = await RefreshToken.createToken(user)
 
-                user.getRoles().then(roles_arg => {
-                    // res.setHeader('token', token)
-                    res.cookie('token', token)
-                    res.status(200).send({
-                        id: user.id,
-                        username: user.username,
-                        name: "-> " + user.name,
-                        role: { 'id': roles_arg.id, 'role': roles_arg.name },
-                        accessToken: token,
-                        token_db: "-> " + user.token,
+                // db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
+                User.update({ token: token }, {
+                    where: {
+                        id: 1
+                    }
+                })
+                    .then(() => {
+                        user.getRoles().then(roles_arg => {
+                            // res.setHeader('token', token)
+                            // res.cookie('token', token)
+                            res.status(200).send({
+                                id: user.id,
+                                username: user.username,
+                                role: { 'id': roles_arg.id, 'role': roles_arg.name },
+                                accessToken: token,
+                                token_db: "-> " + user.token
+                                // refreshTOken: refreshToken,
+                            })
+                        })
                     })
+                    .catch(err => {
+                        view.messageErr(err.message);
+                    });
 
-                })
-                // console.log(req)
             })
             .catch(err => {
-                // if (req.body.username !== 'undefined' || req.body.password !== 'undefined') {
-                //     return res.json({
-                //         message: "Field not completely filled "
-                //     })
-                // }
                 res.status(500).send({ message: err.message })
             })
 
     },
-    signout: function (req, res) {
-        const token = req.headers.token
-        res.cookie('token', '', { maxAge: 1 })
-        res.send('token : ' + req.cookie)
-        // db.sequelize.query(`UPDATE users SET token = '' WHERE id = '${user.id}'`, { type: db.QueryTypes.SELECT });
+    signout: async (req, res) => {
+        const { refreshToken: requestToken } = req.body;
 
-        // const authHeader = req.headers["authorization"];
-        // jwt.sign(token, config.secret, { expiresIn: 0.5 }, (logout, err) => {
-        //     if (logout) {
-        //         res.send({ msg: 'You have been Logged Out' });
-        //     } else {
-        //         res.send({ msg: 'Error' });
-        //     }
-        // });
+        if (requestToken == null) {
+            return res.status(403).json({ message: "Refresh Token is required!" });
+        }
 
+        try {
+            let refreshToken = await RefreshToken.findOne({ where: { token: requestToken } });
+
+            console.log(refreshToken)
+
+            if (!refreshToken) {
+                res.status(403).json({ message: "Refresh token is not in database!" });
+                return;
+            }
+
+            if (RefreshToken.verifyExpiration(refreshToken)) {
+                RefreshToken.destroy({ where: { id: refreshToken.id } });
+
+                res.status(403).json({
+                    message: "Refresh token was expired. Please make a new signin request",
+                });
+                return;
+            }
+
+            const user = await refreshToken.getUser();
+            let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
+                expiresIn: config.jwtExpiration,
+                // expiresIn: config.jwtExpiration,
+            });
+
+            return res.status(200).json({
+                accessToken: newAccessToken,
+                refreshToken: refreshToken.token,
+            });
+        } catch (err) {
+            return res.status(500).send({ message: err });
+        }
     }
 
 }
