@@ -1,18 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
-    const Kecamatan = sequelize.define('wilayah_kecamatan', {
+    const Provinsi = sequelize.define('provinsi', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true
         },
-        kabupaten_id: {
-            type: Sequelize.INTEGER
-        },
         nama: {
             type: Sequelize.STRING
         },
-        status: {
-            type: Sequelize.BOOLEAN
-        },
+        // status: {
+        //     type: Sequelize.BOOLEAN
+        // },
 
     }, {
         timestamps: false,
@@ -20,5 +17,5 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: false,
     })
 
-    return Kecamatan;
+    return Provinsi;
 }

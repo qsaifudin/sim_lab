@@ -1,24 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
-    const Kabupaten = sequelize.define('wilayah_kabupaten', {
+    const Role = sequelize.define("roles", {
         id: {
             type: Sequelize.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
-        provinsi_id: {
-            type: Sequelize.INTEGER
-        },
-        nama: {
+        name: {
             type: Sequelize.STRING
-        },
-        status: {
-            type: Sequelize.BOOLEAN
-        },
-
+        }
     }, {
         timestamps: false,
         createdAt: false,
         updatedAt: false,
     })
 
-    return Kabupaten;
+    return Role;
 }

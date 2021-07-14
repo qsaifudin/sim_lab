@@ -46,7 +46,7 @@ db.QueryTypes = QueryTypes;
 db.user = require('../models/user.model')(sequelize, Sequelize);
 db.role = require('../models/role.model')(sequelize, Sequelize);
 db.provinsi = require('../models/provinsi.model')(sequelize, Sequelize);
-db.kabupaten = require('../models/kabupaten.model')(sequelize, Sequelize);
+db.kota = require('../models/kota.model')(sequelize, Sequelize);
 db.kecamatan = require('../models/kecamatan.model')(sequelize, Sequelize);
 db.kategoriRs = require('../models/kategori_rs.model')(sequelize, Sequelize);
 db.refreshToken = require('../models/refreshToken.model')(sequelize, Sequelize);
@@ -61,10 +61,37 @@ db.user.belongsTo(db.role, {
 })
 
 db.refreshToken.belongsTo(db.user, {
-    foreignKey: 'userId', targetKey: 'id'
+    foreignKey: 'userId',
+    targetKey: 'id'
 });
 db.user.hasOne(db.refreshToken, {
-    foreignKey: 'userId', targetKey: 'id'
+    foreignKey: 'userId',
+    targetKey: 'id'
+});
+
+db.provinsi.hasMany(db.kota, {
+    foreignKey: 'provinsi_id',
+    targetKey: 'id',
+    as: "kota"
+});
+
+db.kota.belongsTo(db.provinsi, {
+    foreignKey: 'provinsi_id',
+    targetKey: 'id',
+    as: "provinsi"
+});
+
+db.kota.hasMany(db.kecamatan, {
+    foreignKey: 'kota_id',
+    targetKey: 'id',
+    as: "kecamatan"
+
+});
+
+db.kecamatan.belongsTo(db.kota, {
+    foreignKey: 'kota_id',
+    targetKey: 'id',
+    as: "kota"
 });
 
 db.ROLES = ["superadmin", "admin", "vendor", "rs", "lab"]

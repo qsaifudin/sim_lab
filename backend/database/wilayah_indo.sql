@@ -79805,21 +79805,22 @@ INSERT INTO wilayah_desa (id, kecamatan_id, nama) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table wilayah_kabupaten
+-- Table structure for table kota
 --
 
-CREATE TABLE IF NOT EXISTS wilayah_kabupaten (
+CREATE TABLE IF NOT EXISTS kota (
   id bigint NOT NULL,
   provinsi_id bigint NOT NULL,
   nama varchar(30) NOT NULL,
+  status BOOLEAN DEFAULT true,
   PRIMARY KEY (id)
 );
 
 --
--- Dumping data for table wilayah_kabupaten
+-- Dumping data for table kota
 --
 
-INSERT INTO wilayah_kabupaten (id, provinsi_id, nama) VALUES
+INSERT INTO kota (id, provinsi_id, nama) VALUES
 ('1101', '11', 'Kab. Simeulue'),
 ('1102', '11', 'Kab. Aceh Singkil'),
 ('1103', '11', 'Kab. Aceh Selatan'),
@@ -80330,6 +80331,7 @@ CREATE TABLE IF NOT EXISTS wilayah_kecamatan (
   id bigint NOT NULL,
   kabupaten_id bigint NOT NULL,
   nama varchar(30) NOT NULL,
+  status BOOLEAN DEFAULT true,
   PRIMARY KEY (id)
 );
 
@@ -87230,6 +87232,7 @@ INSERT INTO wilayah_kecamatan (id, kabupaten_id, nama) VALUES
 CREATE TABLE IF NOT EXISTS wilayah_provinsi (
   id bigint NOT NULL,
   nama varchar(30) NOT NULL,
+  status BOOLEAN DEFAULT true,
   PRIMARY KEY (id)
 );
 

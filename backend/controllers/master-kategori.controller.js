@@ -10,7 +10,7 @@ module.exports = {
                 )
             })
             .catch(err => {
-                res.status(500).send({ message: err.message })
+                res.status(500).json({ message: err.message })
             })
     },
     find: (req, res) => {
@@ -21,7 +21,7 @@ module.exports = {
         })
             .then(kategoriRs => {
                 if (!kategoriRs) {
-                    return res.status(404).send({ message: "kategoriRs Not found." })
+                    return res.status(404).json({ message: "kategoriRs Not found." })
                 }
                 res.status(200).json({
                     id: kategoriRs.id,
@@ -29,7 +29,7 @@ module.exports = {
                 })
             })
             .catch(err => {
-                res.status(500).send({ message: err.message })
+                res.status(500).json({ message: err.message })
             })
     },
     store: (req, res) => {
@@ -41,7 +41,7 @@ module.exports = {
         }
 
         if (!kategori.id || !kategori.nama) {
-            res.status(400).send({
+            res.status(400).json({
                 message: "Content can not be empty"
             })
             return;
@@ -53,11 +53,11 @@ module.exports = {
         })
             .then(data => {
                 if (data) {
-                    return res.status(400).send({ message: "Already exist" })
+                    return res.status(400).json({ message: "Already exist" })
                 }
             })
             .catch(err => {
-                res.status(500).send({ message: err.message })
+                res.status(500).json({ message: err.message })
             })
 
         KategoriRs.create(kategori)
@@ -65,7 +65,7 @@ module.exports = {
                 res.redirect('/m/kategoriRs')
             })
             .catch(err => {
-                res.status(500).send({ message: err.message })
+                res.status(500).json({ message: err.message })
             })
 
     },
@@ -77,13 +77,13 @@ module.exports = {
                 if (data == 1) {
                     res.redirect('/m/kategoriRs')
                 } else {
-                    res.send({
+                    res.json({
                         message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
                     });
                 }
             })
             .catch(err => {
-                res.status(500).send({
+                res.status(500).json({
                     message: "Error updating Tutorial with id=" + id
                 });
             });

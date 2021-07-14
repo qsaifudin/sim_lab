@@ -7,6 +7,9 @@ const jwtBlacklist = require('jwt-blacklist');
 
 module.exports = {
     signin: (req, res) => {
+        if (req.body.username === undefined || req.body.username === undefined) {
+            return res.status(404).json({ message: "Field empty" })
+        }
         User.findOne({
             where: {
                 username: req.body.username
@@ -14,11 +17,11 @@ module.exports = {
         })
             .then(async (user) => {
                 if (!user) {
-                    return res.status(404).send({ message: "User Not found." })
+                    return res.status(404).json({ message: "User Not found." })
                 }
 
                 if (req.body.password !== user.password) {
-                    return res.status(401).send({
+                    return res.status(401).json({
                         message: "Invalid Password!"
                     })
                 }
@@ -27,7 +30,7 @@ module.exports = {
                     expiresIn: config.jwtExpiration
                 })
 
-                // let refreshToken = await RefreshToken.createToken(user)
+                let refreshToken = await RefreshToken.createToken(user)
 
                 // db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
                 User.update({ token: token }, {
@@ -39,13 +42,15 @@ module.exports = {
                         user.getRoles().then(roles_arg => {
                             // res.setHeader('token', token)
                             // res.cookie('token', token)
-                            res.status(200).send({
+                            // localStorage.setItem('token', token)
+                            // localStorage.setItem('username', user.username)
+                            res.status(200).json({
                                 id: user.id,
                                 username: user.username,
                                 role: { 'id': roles_arg.id, 'role': roles_arg.name },
                                 accessToken: token,
-                                token_db: "-> " + user.token
-                                // refreshTOken: refreshToken,
+                                // token_db: "-> " + user.token,
+                                refreshTOken: refreshToken,
                             })
                         })
                     })
@@ -55,11 +60,11 @@ module.exports = {
 
             })
             .catch(err => {
-                res.status(500).send({ message: err.message })
+                res.status(500).json({ message: err.message })
             })
 
     },
-    signout: async (req, res) => {
+    refreshToken: async (req, res) => {
         const { refreshToken: requestToken } = req.body;
 
         if (requestToken == null) {
@@ -96,7 +101,7 @@ module.exports = {
                 refreshToken: refreshToken.token,
             });
         } catch (err) {
-            return res.status(500).send({ message: err });
+            return res.status(500).json({ message: err });
         }
     }
 
