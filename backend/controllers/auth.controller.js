@@ -31,7 +31,6 @@ module.exports = {
                 })
 
                 let refreshToken = await RefreshToken.createToken(user)
-
                 // db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
                 User.update({ token: token }, {
                     where: {
