@@ -20,18 +20,22 @@
                       <h4 class="text-center alt-4">
                         Ensure your email for registration
                       </h4>
-                      <v-form>
+                      <v-form @submit="login">
                         <v-text-field
-                          label="Email"
-                          name="Email"
+                          v-model="password"
+                          required
+                          label="username"
+                          name="username"
                           prepend-inner-icon="mdi-email"
                           type="text"
                           color="#328F6C"
                         />
                         <v-text-field
                           id="password"
+                          v-model="password"
+                          required
                           label="Password"
-                          name="Password"
+                          name="password"
                           prepend-inner-icon="mdi-lock"
                           type="password"
                           color="#328F6C"
@@ -40,6 +44,7 @@
                       <h3 class="text-center mt-3">Forget your password?</h3>
                       <div class="text-center mt-3">
                         <v-btn
+                          type="submit"
                           rounded
                           color="#328F6C"
                           link="~/pages/dashboard.vue"
@@ -70,8 +75,23 @@
 
 <script>
 export default {
-  data: () => ({
-    step: 1,
-  }),
+  data: () => ({}),
+
+  methods: {
+    login() {
+      this.axios
+        .post('/signin', {
+          username: 'sa-sura',
+          password: '1234567890',
+        })
+        .then((res) => {
+          localStorage.setItem('token', res.data.token)
+          window.location.href = 'http://localhost:3000/dashboard'
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+  },
 }
 </script>

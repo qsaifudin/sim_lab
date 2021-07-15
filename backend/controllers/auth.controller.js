@@ -3,7 +3,6 @@ const config = require("../config/auth.config")
 const { user: User, role: Role, refreshToken: RefreshToken } = db;
 
 const jwt = require('jsonwebtoken');
-const jwtBlacklist = require('jwt-blacklist');
 
 module.exports = {
     signin: (req, res) => {
@@ -26,12 +25,11 @@ module.exports = {
                     })
                 }
 
-                const token = jwt.sign({ id: user.id, username: user.username }, config.secret, {
+                const token = jwt.sign({ id: user.id }, config.secret, {
                     expiresIn: config.jwtExpiration
                 })
 
                 let refreshToken = await RefreshToken.createToken(user)
-
                 // db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
                 User.update({ token: token }, {
                     where: {
@@ -49,7 +47,6 @@ module.exports = {
                                 username: user.username,
                                 role: { 'id': roles_arg.id, 'role': roles_arg.name },
                                 accessToken: token,
-                                // token_db: "-> " + user.token,
                                 refreshTOken: refreshToken,
                             })
                         })
