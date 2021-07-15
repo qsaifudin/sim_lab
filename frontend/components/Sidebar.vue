@@ -74,7 +74,7 @@ export default {
           title: 'Datamaster Category',
         },
         {
-          link: '/rumkit',
+          link: '/rs/rumkit',
           icon: 'mdi-hospital-building',
           title: 'Datamaster Rumah Sakit',
         },

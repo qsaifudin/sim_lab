@@ -6,6 +6,11 @@
     sort-by="id"
     class="elevation-1"
   >
+    <template #[`item.status`]="{ item }">
+      <v-chip class="ma-2" :color="getColor(item.status)" dark>
+        {{ item.status }}
+      </v-chip>
+    </template>
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Category Rumah Sakit</v-toolbar-title>
@@ -21,7 +26,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
               Add Category
             </v-btn>
           </template>
@@ -46,10 +51,8 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.status"
-                      label="Status"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.status" label="Status">
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -154,6 +157,10 @@ export default {
   },
 
   methods: {
+    getColor(status) {
+      if (status === 'Aktif') return 'green'
+      else return 'red'
+    },
     initialize() {
       this.rs = [
         {
@@ -171,7 +178,7 @@ export default {
         {
           name: 'RSUD',
           id: 3,
-          status: 'Aktif',
+          status: 'Non-Aktif',
           action: '',
         },
       ]
