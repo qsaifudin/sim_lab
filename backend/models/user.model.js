@@ -9,9 +9,9 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         },
-        token: {
-            type: Sequelize.STRING
-        }
+        // token: {
+        //     type: Sequelize.STRING
+        // }
     }, {
         timestamps: false,
         createdAt: false,

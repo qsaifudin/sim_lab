@@ -20,16 +20,22 @@
                       <h4 class="text-center alt-4">
                         Ensure your email for registration
                       </h4>
-                      <v-form>
+                      <v-form
+                        accept-charset="UTF-8"
+                        method="POST"
+                        @:submit.prevent="login()"
+                      >
                         <v-text-field
-                          label="Email"
-                          name="Email"
+                          label="username"
+                          v-model="username"
+                          name="username"
                           prepend-inner-icon="mdi-email"
                           type="text"
                           color="#328F6C"
                         />
                         <v-text-field
                           id="password"
+                          v-model="password"
                           label="Password"
                           name="Password"
                           prepend-inner-icon="mdi-lock"
@@ -39,6 +45,7 @@
                       </v-form>
                       <h3 class="text-center mt-3">Forget your password?</h3>
                       <div class="text-center mt-3">
+                        <button type="submit">Submit</button>
                         <v-btn
                           rounded
                           color="#328F6C"
@@ -69,9 +76,37 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  data: () => ({
-    step: 1,
-  }),
+  data() {
+    return {
+      loading: true,
+      username: '',
+      password: '',
+    }
+  },
+  methods: {
+    login() {
+      const data = {
+        username: this.username,
+        password: this.password,
+      }
+      axios
+        .post('http://localhost:3003}', data, {
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+        .then(
+          (response) => {
+            this.isSuccess = response.data.success ? true : false
+          },
+          (response) => {
+            localStorage.setItem('token', response.data.accessToken)
+            window.location.href.=.'http://localhost:3000/dashboard/'
+          }
+        )
+    },
+  },
 }
 </script>
