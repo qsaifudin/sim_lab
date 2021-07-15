@@ -3,7 +3,6 @@ const config = require("../config/auth.config")
 const { user: User, role: Role, refreshToken: RefreshToken } = db;
 
 const jwt = require('jsonwebtoken');
-const jwtBlacklist = require('jwt-blacklist');
 
 module.exports = {
     signin: (req, res) => {
