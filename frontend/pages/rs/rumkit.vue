@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="vendor"
+    :items="rumkit"
     :search="search"
     sort-by="id"
     class="elevation-1"
@@ -13,7 +13,7 @@
     </template>
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Data Vendor</v-toolbar-title>
+        <v-toolbar-title>Data Rumah Sakit</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-text-field
@@ -27,7 +27,7 @@
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
             <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Vendor
+              Add Rumah Sakit
             </v-btn>
           </template>
           <v-card>
@@ -47,7 +47,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Vendor name"
+                      label="Nama RS"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -59,7 +59,25 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.kota"
-                      label="Kota"
+                      label="kota"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="8">
+                    <v-text-field
+                      v-model="editedItem.alamat"
+                      label="Alamat"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.category_id"
+                      label="Id Category"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.vendor_id"
+                      label="Id Vendor"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -96,7 +114,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <vendor-detail ref="vendorDetail"></vendor-detail>
+        <rumkit-detail ref="rumkitDetail"></rumkit-detail>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -119,9 +137,9 @@
 </template>
 
 <script>
-import vendorDetail from '~/pages/vendor/vendorDetail'
+import rumkitDetail from '~/pages/rs/rumkitDetail'
 export default {
-  components: { vendorDetail },
+  components: { rumkitDetail },
   data: () => ({
     dialog: false,
     dialogDelete: false,
@@ -129,23 +147,29 @@ export default {
     headers: [
       { text: 'Id', value: 'id' },
       {
-        text: 'Vendor',
+        text: 'Rumah Sakit',
         align: 'start',
         sortable: true,
         value: 'name',
       },
-      { text: 'Provinsi', value: 'provinsi' },
-      { text: 'Kota', value: 'kota' },
+      // { text: 'Provinsi', value: 'provinsi' },
+      // { text: 'Kota', value: 'kota' },
+      { text: 'Alamat', value: 'alamat' },
       { text: 'Status', value: 'status' },
+      // { text: 'Category_id', value: 'category_id' },
+      // { text: 'Vendor_id', value: 'vendor_id' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
-    vendor: [],
+    rumkit: [],
     editedIndex: -1,
     editedItem: {
       id: '',
       name: '',
       provinsi: '',
       kota: '',
+      alamat: '',
+      category_id: '',
+      vendor_id: '',
       status: '',
     },
     defaultItem: {
@@ -153,13 +177,16 @@ export default {
       name: '',
       provinsi: '',
       kota: '',
+      alamat: '',
+      category_id: '',
+      vendor_id: '',
       status: '',
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Item'
+      return this.editedIndex === -1 ? 'Rumah Sakit Baru' : 'Edit Data RS'
     },
   },
 
@@ -182,44 +209,48 @@ export default {
       else return 'red'
     },
     initialize() {
-      this.vendor = [
+      this.rumkit = [
         {
-          name: 'PT WRG',
-          id: 1,
+          id: '1',
+          name: 'RS Undaan',
           provinsi: 'Jawa Timur',
           kota: 'Surabaya',
+          alamat: 'Jl Undaan Kulon No. 19, Peneleh',
+          category_id: '2',
+          vendor_id: '1',
           status: 'Aktif',
-          action: '',
         },
         {
-          name: 'PT Adam Labs',
-          id: 2,
-          provinsi: 'Jawa Barat',
-          kota: 'Bogor',
-          status: 'Aktif',
-          action: '',
+          id: '2',
+          name: 'RSUD Dr.Soetomo',
+          provinsi: 'Jawa Timur',
+          kota: 'Surabaya',
+          alamat: 'Jl Mayjen Prof Dr.Moestopo No. 6-8',
+          category_id: '3',
+          vendor_id: '1',
+          status: 'Non-Aktif',
         },
       ]
     },
 
     detailItem(item) {
-      this.$refs.vendorDetail.open(item)
+      this.$refs.rumkitDetail.open(item)
     },
 
     editItem(item) {
-      this.editedIndex = this.vendor.indexOf(item)
+      this.editedIndex = this.rumkit.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.vendor.indexOf(item)
+      this.editedIndex = this.rumkit.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.vendor.splice(this.editedIndex, 1)
+      this.rumkit.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 
@@ -241,9 +272,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.vendor[this.editedIndex], this.editedItem)
+        Object.assign(this.rumkit[this.editedIndex], this.editedItem)
       } else {
-        this.vendor.push(this.editedItem)
+        this.rumkit.push(this.editedItem)
       }
       this.close()
     },
