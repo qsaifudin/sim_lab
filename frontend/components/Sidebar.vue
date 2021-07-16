@@ -17,7 +17,11 @@
 
         <v-list nav>
           <template v-for="(item, index) in items">
-            <v-list-item :key="index" :to="`${item.link}`" :title="item.title">
+            <v-list-item
+              :key="index"
+              :to="`${item.link}`"
+              :title="item.title === 'Title' ? logout() : ''"
+            >
               <v-list-item-icon>
                 <v-icon color="#FFFFFF">{{ item.icon }}</v-icon>
               </v-list-item-icon>
@@ -94,13 +98,18 @@ export default {
           title: 'Datamaster User',
         },
         {
-          link: '/login',
+          // link: '/login',
           icon: 'mdi-arrow-left-bold-outline',
           title: 'Logout',
         },
       ],
       mini: true,
     }
+  },
+  methods: {
+    async logout() {
+      await this.$router.push('dashboard')
+    },
   },
 }
 </script>

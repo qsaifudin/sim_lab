@@ -3,12 +3,16 @@ const app = express()
 
 const cors = require('cors');
 var corsOptions = {
-    origin: "http://localhost:3000/"
+    origin: 'http://localhost:3000',
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200
 };
 app.use(cors(corsOptions))
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 
 //connect to database
 const db = require('./models')
@@ -53,5 +57,3 @@ require('./routes/user.route')(app)
 require('./routes/wilayah.route')(app)
 require('./routes/master-kategori.route')(app)
 app.listen(3003, () => console.log(`http://localhost:3003`))
-
-

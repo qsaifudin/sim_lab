@@ -3,13 +3,19 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
-const { TokenExpiredError } = jwt
+const {
+    TokenExpiredError
+} = jwt
 
 const catchError = (err, res) => {
     if (err instanceof TokenExpiredError) {
-        return res.status(401).send({ message: "Unauthorized! Access Token was expired!" })
+        return res.status(401).send({
+            message: "Unauthorized! Access Token was expired!"
+        })
     }
-    return res.sendStatus(401).send({ message: "Unauthorized!" });
+    return res.sendStatus(401).send({
+        message: "Unauthorized!"
+    });
 }
 
 verifyToken = (req, res, next) => {
@@ -31,7 +37,7 @@ verifyToken = (req, res, next) => {
     });
 };
 
-isSuperAdmin = (req, res, next) => {
+authSuperAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
             if (roles.name === "superadmin") {
@@ -46,7 +52,7 @@ isSuperAdmin = (req, res, next) => {
     });
 };
 
-isAdmin = (req, res, next) => {
+authAdmin = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
             if (roles.name === "admin" || roles.name === "superadmin") {
@@ -61,10 +67,10 @@ isAdmin = (req, res, next) => {
     });
 };
 
-isVendor = (req, res, next) => {
+authVendor = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
-            if (roles.name === "vendor") {
+            if (roles.name === "vendor" || roles.name === "admin") {
                 next();
                 return;
             }
@@ -75,10 +81,10 @@ isVendor = (req, res, next) => {
     });
 };
 
-isRs = (req, res, next) => {
+authRs = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
-            if (roles.name === "rs") {
+            if (roles.name === "rs" || roles.name === "admin") {
                 next();
                 return;
             }
@@ -89,10 +95,10 @@ isRs = (req, res, next) => {
     });
 };
 
-isLab = (req, res, next) => {
+authLab = (req, res, next) => {
     User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
-            if (roles.name === "lab") {
+            if (roles.name === "lab" || roles.name === "admin") {
                 next();
                 return;
             }
@@ -106,10 +112,12 @@ isLab = (req, res, next) => {
 
 const authJwt = {
     verifyToken: verifyToken,
-    isSuperAdmin: isSuperAdmin,
-    isAdmin: isAdmin,
-    isVendor: isVendor,
-    isRs: isRs,
-    isLab: isLab
+    authSuperAdmin: authSuperAdmin,
+    authAdmin: authAdmin,
+    authVendor: authVendor,
+    authRs: authRs,
+    authLab: authLab
 };
-module.exports = { authJwt };
+module.exports = {
+    authJwt
+};

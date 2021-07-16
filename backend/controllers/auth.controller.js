@@ -62,7 +62,7 @@ module.exports = {
                             },
                             accessToken: token,
                             // token_db: "-> " + user.token,
-                            refreshTOken: refreshToken,
+                            refreshToken: refreshToken,
                         })
                     })
                     // })
@@ -135,6 +135,17 @@ module.exports = {
                 message: err
             });
         }
-    }
+    },
 
+    logout: (req, res) => {
+        RefreshToken.destroy({
+            where: {
+                token: req.body.refreshToken
+            }
+        }).then(() => {
+            res.status(202).send({
+                message: "logout"
+            });
+        });
+    }
 }

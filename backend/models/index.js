@@ -1,24 +1,27 @@
 const config = require("../config/db.config.js");
 
-const { Sequelize, QueryTypes } = require("sequelize");
+const {
+    Sequelize,
+    QueryTypes
+} = require("sequelize");
 const sequelize = new Sequelize(
     config.DB,
     config.USER,
     config.PASSWORD, {
-    host: config.HOST,
-    dialect: config.dialect,
-    operatorsAliases: 0,
-    logging: 0,
-    define: {
-        freezeTableName: 1
-    },
-    pool: {
-        max: config.pool.max,
-        min: config.pool.min,
-        acquire: config.pool.acquire,
-        idle: config.pool.idle
-    }
-})
+        host: config.HOST,
+        dialect: config.dialect,
+        operatorsAliases: 0,
+        logging: 0,
+        define: {
+            freezeTableName: 1
+        },
+        pool: {
+            max: config.pool.max,
+            min: config.pool.min,
+            acquire: config.pool.acquire,
+            idle: config.pool.idle
+        }
+    })
 
 // const sequelize = new Sequelize("postgres://postgres:postgres@localhost/lims_adamlabs",
 //     {
@@ -62,11 +65,13 @@ db.user.belongsTo(db.role, {
 
 db.refreshToken.belongsTo(db.user, {
     foreignKey: 'userId',
-    targetKey: 'id'
+    targetKey: 'id',
+    as: "user"
 });
 db.user.hasOne(db.refreshToken, {
     foreignKey: 'userId',
-    targetKey: 'id'
+    targetKey: 'id',
+    as: "refreshToken"
 });
 
 db.provinsi.hasMany(db.kota, {
@@ -97,5 +102,3 @@ db.kecamatan.belongsTo(db.kota, {
 db.ROLES = ["superadmin", "admin", "vendor", "rs", "lab"]
 
 module.exports = db
-
-

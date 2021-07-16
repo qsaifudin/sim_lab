@@ -1,4 +1,6 @@
-const { authJwt } = require('../middleware/authJwt')
+const {
+    authJwt
+} = require('../middleware/authJwt')
 const controller = require('../controllers/user.controller')
 
 module.exports = app => {
@@ -14,27 +16,52 @@ module.exports = app => {
 
     app.get(
         '/page/superadmin',
-        [authJwt.verifyToken, authJwt.isSuperAdmin],
+        [authJwt.verifyToken, authJwt.authSuperAdmin],
         controller.superAdminBoard
     )
     app.get(
         '/page/admin',
-        [authJwt.verifyToken, authJwt.isAdmin, authJwt.isSuperAdmin],
+        [authJwt.verifyToken, authJwt.authAdmin, ],
         controller.adminBoard
     )
     app.get(
         '/page/vendor',
-        [authJwt.verifyToken, authJwt.isVendor],
+        [authJwt.verifyToken, authJwt.authVendor],
         controller.vendorBoard
     )
     app.get(
         '/page/rs',
-        [authJwt.verifyToken, authJwt.isRs],
+        [authJwt.verifyToken, authJwt.authRs],
         controller.rsBoard
     )
     app.get(
         '/page/lab',
-        [authJwt.verifyToken, authJwt.isLab],
+        [authJwt.verifyToken, authJwt.authLab],
         controller.labBoard
     )
+    // app.get(
+    //     '/page/superadmin',
+    //     [authJwt.verifyToken, authJwt.isSuperAdmin],
+    //     controller.superAdminBoard
+    // )
+    // app.get(
+    //     '/page/admin',
+    //     [authJwt.verifyToken, authJwt.isAdmin, ],
+    //     controller.adminBoard
+    // )
+    // app.get(
+    //     '/page/vendor',
+    //     [authJwt.verifyToken, authJwt.isVendor],
+    //     controller.vendorBoard
+    // )
+    // app.get(
+    //     '/page/rs',
+    //     [authJwt.verifyToken, authJwt.isRs],
+    //     controller.rsBoard
+    // )
+    // app.get(
+    //     '/page/lab',
+    //     [authJwt.verifyToken, authJwt.isLab],
+    //     controller.labBoard
+    // )
 }
