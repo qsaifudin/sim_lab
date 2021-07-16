@@ -3,6 +3,7 @@
     :headers="headers"
     :items="rs"
     :search="search"
+    :search-s="search"
     sort-by="id"
     class="elevation-1"
   >
@@ -16,13 +17,26 @@
         <v-toolbar-title>Category Rumah Sakit</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
+        <div class="mt-5">
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            filled
+            dense
+            outlined
+          ></v-text-field>
+        </div>
+        <v-spacer></v-spacer>
+        <div class="mt-5">
+          <v-select
+            v-model="search"
+            :items="['RSUD', 'RS UMUM', 'RS SWASTA']"
+            label="Category"
+            dense
+            outlined
+          ></v-select>
+        </div>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
