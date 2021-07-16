@@ -12,8 +12,8 @@ module.exports = (sequelize, Sequelize) => {
                     args: true,
                     msg: 'Nama Rumah Sakit harus diisi'
                 },
-                min: {
-                    args: 3,
+                len: {
+                    args: [2, 255],
                     msg: 'Nama Rumah Sakit harus lebih dari 2 karakter'
                 }
             }

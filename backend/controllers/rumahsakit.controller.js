@@ -4,6 +4,7 @@ const Rumahsakit = db.rumahsakit
 module.exports = {
     index: async(req, res) => {
         const rumahsakit = await Rumahsakit.findAll()
+
         res.status(200).json(rumahsakit)
     },
 
@@ -37,7 +38,7 @@ module.exports = {
                 status
             })
             return res.send(newRs)
-            // res.redirect('/lab')
+            // res.redirect('/rumahsakit')
         } catch (error) {
             return res.status(500).send({
                 message: `Error: ${error.message}`
