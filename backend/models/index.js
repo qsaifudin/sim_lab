@@ -10,8 +10,14 @@ const sequelize = new Sequelize(
     config.PASSWORD, {
         host: config.HOST,
         dialect: config.dialect,
+        // 'lims_adamlabs',
+        // 'postgres',
+        // 'postgres', {
+        //     host: 'localhost',
+        //     dialect: 'postgres',
         operatorsAliases: 0,
         logging: 0,
+        port: 5432,
         define: {
             freezeTableName: 1
         },

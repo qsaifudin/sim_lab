@@ -97,7 +97,7 @@ export default {
         })
         .then((res) => {
           this.isSuccess = !!res.data.success
-          // console.log(res.data.accessToken)
+          console.log(res)
           localStorage.setItem('token', res.data.accessToken)
           localStorage.setItem('refreshToken', res.data.refreshToken)
           this.$router.push('dashboard')
