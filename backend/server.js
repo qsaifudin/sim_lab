@@ -53,7 +53,7 @@ require('./routes/user.route')(app)
 require('./routes/wilayah.route')(app)
 require('./routes/master-kategori.route')(app)
 require('./routes/vendor.route')(app)
-
+require('./routes/lab.route')(app)
 require('./routes/rumahsakit.route')(app)
 
 
