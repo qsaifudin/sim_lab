@@ -1,22 +1,30 @@
 const db = require("../models")
 const config = require("../config/auth.config")
-const { user: User, role: Role, refreshToken: RefreshToken } = db;
+const {
+    user: User,
+    role: Role,
+    refreshToken: RefreshToken
+} = db;
 
 const jwt = require('jsonwebtoken');
 
 module.exports = {
     signin: (req, res) => {
         if (req.body.username === undefined || req.body.username === undefined) {
-            return res.status(404).json({ message: "Field empty" })
+            return res.status(404).json({
+                message: "Field empty"
+            })
         }
         User.findOne({
-            where: {
-                username: req.body.username
-            }
-        })
+                where: {
+                    username: req.body.username
+                }
+            })
             .then(async (user) => {
                 if (!user) {
-                    return res.status(404).json({ message: "User Not found." })
+                    return res.status(404).json({
+                        message: "User Not found."
+                    })
                 }
 
                 if (req.body.password !== user.password) {
@@ -25,61 +33,84 @@ module.exports = {
                     })
                 }
 
-                const token = jwt.sign({ id: user.id }, config.secret, {
+                const token = jwt.sign({
+                    id: user.id,
+                    username: user.username
+                }, config.secret, {
                     expiresIn: config.jwtExpiration
                 })
 
                 let refreshToken = await RefreshToken.createToken(user)
                 // db.sequelize.query(`UPDATE users SET token = '${token}' WHERE id = '${user.id}'`, { type: db.QueryTypes.UPDATE });
-                User.update({ token: token }, {
-                    where: {
-                        id: 1
-                    }
-                })
-                    .then(() => {
-                        user.getRoles().then(roles_arg => {
-                            // res.setHeader('token', token)
-                            // res.cookie('token', token)
-                            // localStorage.setItem('token', token)
-                            // localStorage.setItem('username', user.username)
-                            res.status(200).json({
-                                id: user.id,
-                                username: user.username,
-                                role: { 'id': roles_arg.id, 'role': roles_arg.name },
-                                accessToken: token,
-                                refreshTOken: refreshToken,
-                            })
+                // User.update({ token: token }, {
+                //     where: {
+                //         id: 1
+                //     }
+                // })
+                // .then(() => {
+                user.getRoles().then(roles_arg => {
+                        // res.setHeader('token', token)
+                        // res.cookie('token', token)
+                        // localStorage.setItem('token', token)
+                        // localStorage.setItem('username', user.username)
+                        res.status(200).json({
+                            id: user.id,
+                            username: user.username,
+                            role: {
+                                'id': roles_arg.id,
+                                'role': roles_arg.name
+                            },
+                            accessToken: token,
+                            // token_db: "-> " + user.token,
+                            refreshToken: refreshToken,
                         })
                     })
+                    // })
                     .catch(err => {
                         view.messageErr(err.message);
                     });
 
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
             })
 
     },
     refreshToken: async (req, res) => {
-        const { refreshToken: requestToken } = req.body;
+        const {
+            refreshToken: requestToken
+        } = req.body;
 
         if (requestToken == null) {
-            return res.status(403).json({ message: "Refresh Token is required!" });
+            return res.status(403).json({
+                message: "Refresh Token is required!"
+            });
         }
 
         try {
-            let refreshToken = await RefreshToken.findOne({ where: { token: requestToken } });
+            let refreshToken = await RefreshToken.findOne({
+                where: {
+                    token: requestToken
+                }
+            });
 
             console.log(refreshToken)
 
             if (!refreshToken) {
-                res.status(403).json({ message: "Refresh token is not in database!" });
+                res.status(403).json({
+                    message: "Refresh token is not in database!"
+                });
                 return;
             }
 
             if (RefreshToken.verifyExpiration(refreshToken)) {
-                RefreshToken.destroy({ where: { id: refreshToken.id } });
+                RefreshToken.destroy({
+                    where: {
+                        id: refreshToken.id
+                    }
+                });
 
                 res.status(403).json({
                     message: "Refresh token was expired. Please make a new signin request",
@@ -88,7 +119,9 @@ module.exports = {
             }
 
             const user = await refreshToken.getUser();
-            let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
+            let newAccessToken = jwt.sign({
+                id: user.id
+            }, config.secret, {
                 expiresIn: config.jwtExpiration,
                 // expiresIn: config.jwtExpiration,
             });
@@ -98,12 +131,21 @@ module.exports = {
                 refreshToken: refreshToken.token,
             });
         } catch (err) {
-            return res.status(500).json({ message: err });
+            return res.status(500).json({
+                message: err
+            });
         }
+    },
+
+    logout: (req, res) => {
+        RefreshToken.destroy({
+            where: {
+                token: req.body.refreshToken
+            }
+        }).then(() => {
+            res.status(202).send({
+                message: "logout"
+            });
+        });
     }
-
 }
-
-
-
-

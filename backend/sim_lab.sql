@@ -21,41 +21,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: auth; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.auth (
-    id integer NOT NULL,
-    user_id integer,
-    token character varying(255)
-);
-
-
-ALTER TABLE public.auth OWNER TO postgres;
-
---
--- Name: auth_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.auth_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.auth_id_seq OWNER TO postgres;
-
---
--- Name: auth_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.auth_id_seq OWNED BY public.auth.id;
-
-
---
 -- Name: kategori_rs; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -265,8 +230,7 @@ CREATE TABLE public.users (
     nama character varying(255),
     username character varying(255),
     password character varying(255),
-    "roleId" integer,
-    token character varying(255)
+    "roleId" integer
 );
 
 
@@ -332,13 +296,6 @@ ALTER SEQUENCE public.vendor_id_seq OWNED BY public.vendor.id;
 
 
 --
--- Name: auth id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.auth ALTER COLUMN id SET DEFAULT nextval('public.auth_id_seq'::regclass);
-
-
---
 -- Name: kategori_rs id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -378,14 +335,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.vendor ALTER COLUMN id SET DEFAULT nextval('public.vendor_id_seq'::regclass);
-
-
---
--- Data for Name: auth; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.auth (id, user_id, token) FROM stdin;
-\.
 
 
 --
@@ -7845,9 +7794,13 @@ COPY public.provinsi (id, nama, status) FROM stdin;
 --
 
 COPY public."refreshToken" (id, token, "expiryDate", "userId") FROM stdin;
-30	ab6afcfb-3e29-425a-8278-c783322f638a	2021-07-15 07:28:53.067+07	1
-31	9cf4bf28-e97a-444f-9596-589786c6feed	2021-07-15 07:29:12.542+07	1
-32	ca8869c7-f904-49e8-884d-c793f584315e	2021-07-15 07:31:40.247+07	1
+64	0e26618d-4087-4453-8fab-ff0c39632a3a	2021-07-17 08:06:41.484+07	2
+65	424b1da0-22a5-42f6-98a3-e3efcadad2c5	2021-07-17 08:08:27.054+07	2
+67	b7176f7c-1f71-432e-a145-12f823c3d22d	2021-07-17 08:09:31.864+07	3
+68	3f716bd5-aebf-4bde-aad6-588ef3154455	2021-07-17 08:10:33.702+07	2
+69	c83f478c-e4b6-43e9-9998-e1028aa07a6a	2021-07-17 09:25:58.791+07	1
+70	559a2c97-2e3b-4c0c-8479-9aec282dc7f0	2021-07-17 09:38:54.65+07	1
+62	e457f0e9-4f02-4d9e-bd5f-bfb5eea40ede	2021-07-17 07:24:31.72+07	1
 \.
 
 
@@ -7876,9 +7829,10 @@ COPY public.rumah_sakit (id, nama, provinsi, kota, kecamatan, alamat, kategori_i
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, nama, username, password, "roleId", token) FROM stdin;
-2	mimin	a-sura	1234567890	2	\N
-1	supermin	sa-sura	1234567890	1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzYS1zdXJhIiwiaWF0IjoxNjI2MjIyNzAwLCJleHAiOjE2MjYyMjI3NjB9.QlgbAyiDuN--trRKXqYZB9B_VPOlojE2TePJR0q6YXM
+COPY public.users (id, nama, username, password, "roleId") FROM stdin;
+2	mimin	a-sura	1234567890	2
+1	supermin	sa-sura	1234567890	1
+3	vendorr	v-sura	1234567890	3
 \.
 
 
@@ -7888,13 +7842,6 @@ COPY public.users (id, nama, username, password, "roleId", token) FROM stdin;
 
 COPY public.vendor (id, nama, provinsi, kota, status) FROM stdin;
 \.
-
-
---
--- Name: auth_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.auth_id_seq', 1, true);
 
 
 --
@@ -7915,7 +7862,7 @@ SELECT pg_catalog.setval('public.lab_id_seq', 1, false);
 -- Name: refreshToken_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."refreshToken_id_seq"', 32, true);
+SELECT pg_catalog.setval('public."refreshToken_id_seq"', 70, true);
 
 
 --
@@ -7929,7 +7876,7 @@ SELECT pg_catalog.setval('public.rumah_sakit_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 
 
 --
@@ -7937,14 +7884,6 @@ SELECT pg_catalog.setval('public.users_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.vendor_id_seq', 1, false);
-
-
---
--- Name: auth auth_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.auth
-    ADD CONSTRAINT auth_pkey PRIMARY KEY (id);
 
 
 --
