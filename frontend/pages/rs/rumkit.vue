@@ -37,57 +37,63 @@
 
             <v-card-text>
               <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Nama RS"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.provinsi"
-                      label="Provinsi"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.kota"
-                      label="kota"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="8">
-                    <v-text-field
-                      v-model="editedItem.alamat"
-                      label="Alamat"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.category_id"
-                      label="Id Category"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.vendor_id"
-                      label="Id Vendor"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.status"
-                      label="Status"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+                <v-form v-model="valid">
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.id"
+                        label="Id"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="Nama RS"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.provinsi"
+                        label="Provinsi"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.kota"
+                        label="kota"
+                        aria-required="true"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="8">
+                      <v-text-field
+                        v-model="editedItem.alamat"
+                        label="Alamat"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.category_id"
+                        label="Id Category"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.vendor_id"
+                        label="Id Vendor"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                        v-model="editedItem.status"
+                        label="Status"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-form>
               </v-container>
+              <small>*indicates required field</small>
             </v-card-text>
 
             <v-card-actions>
@@ -141,6 +147,7 @@ import rumkitDetail from '~/pages/rs/rumkitDetail'
 export default {
   components: { rumkitDetail },
   data: () => ({
+    valid: false,
     dialog: false,
     dialogDelete: false,
     search: '',

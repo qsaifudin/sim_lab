@@ -41,7 +41,9 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.name"
+                      :rules="nameRules"
                       label="RS name"
+                      required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -51,7 +53,12 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.status" label="Status">
+                    <v-text-field
+                      v-model="editedItem.status"
+                      :rules="statusRules"
+                      label="Status"
+                      required
+                    >
                     </v-text-field>
                   </v-col>
                 </v-row>
@@ -112,6 +119,11 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: '',
+    nameRules: [
+      (v) => !!v || 'Name is required',
+      (v) => v.length <= 10 || 'Name must be less than 10 characters',
+    ],
+    statusRules: [(v) => !!v || 'Status is required'],
     headers: [
       {
         text: 'Rumah Sakit',
