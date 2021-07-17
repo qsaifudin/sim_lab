@@ -2,13 +2,13 @@ const db = require('../models')
 const Rumahsakit = db.rumahsakit
 
 module.exports = {
-    index: async(req, res) => {
+    getAll: async(req, res) => {
         const rumahsakit = await Rumahsakit.findAll()
 
         res.status(200).json(rumahsakit)
     },
 
-    show: async(req, res) => {
+    find: async(req, res) => {
         const {id} = req.params
 
         const rumahsakit = await Rumahsakit.findOne({
@@ -17,10 +17,6 @@ module.exports = {
             },
         })
         res.json(rumahsakit)
-    },
-
-    create: (req, res) => {
-        // res.render('rumahsakit/create')
     },
 
     store: async(req, res) => {
@@ -44,10 +40,6 @@ module.exports = {
                 message: `Error: ${error.message}`
             })
         }
-    },
-
-    edit: (req, res) => {
-        const rumahsakit = Rumahsakit.findByPk(req.params.id)
     },
 
     update: (req, res) => {

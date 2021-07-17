@@ -1,10 +1,8 @@
 const controller = require('../controllers/lab.controller')
 
 module.exports = app => {
-    app.get('/lab', controller.index)
-    app.get('/lab/:id', controller.show)
-    app.get('/lab/create', controller.create)
-    app.post('/lab', controller.store)
-    app.get('/lab/edit/:id', controller.edit)
-    app.patch('/lab/edit/:id', controller.update)
+    app.get('/lab', controller.getAll) // List Data
+    app.get('/lab/:id', controller.find) // Detail Data
+    app.post('/lab', controller.store)  //Create Data
+    app.patch('/lab/:id', controller.update) //Update Data
 }

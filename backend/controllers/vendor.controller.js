@@ -2,13 +2,13 @@ const db = require("../models")
 const Vendor = db.vendor
 
 module.exports = {
-    index: async (req, res) => {
+    getAll: async (req, res) => {
         const vendors = await Vendor.findAll();
 
         res.status(200).json(vendors)
     },
 
-    show: async(req, res) => {
+    find: async(req, res) => {
         const { id } = req.params;
 
         const vendor = await Vendor.findOne({
@@ -19,10 +19,6 @@ module.exports = {
         res.json(vendor)
     },
     
-    create: (req, res) => {
-        // res.render('vendor/create-vendor')
-    },
-
     store: async(req, res) => {
         const { nama, provinsi, kota, status } = req.body
 
@@ -40,10 +36,6 @@ module.exports = {
                 message: `Error : ${error.message}`
             })
         }
-    },
-
-    edit: (req, res) => {
-        const vendor = Vendor.findByPk(req.params.id);
     },
     
     update: (req, res) => {                                        

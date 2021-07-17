@@ -2,13 +2,13 @@ const db = require('../models')
 const Lab = db.lab
 
 module.exports = {
-    index: async(req, res) => {
+    getAll: async(req, res) => {
         const labs = await Lab.findAll()
         
         res.json(labs)
     },
 
-    show: async(req, res) => {
+    find: async(req, res) => {
         const {id} = req.params
 
         const lab = await Lab.findOne({
@@ -17,10 +17,6 @@ module.exports = {
             },
         })
         res.json(lab)
-    },
-
-    create: (req, res) => {
-        // res.render('lab/create-lab')
     },
 
     store: async (req, res) => {
@@ -40,11 +36,7 @@ module.exports = {
         }
         // res.redirect('/lab')
     },
-
-    edit: (req, res) => {
-        const lab = Lab.findByPk(req.params.id);
-    },
-
+    
     update: (req, res) => {
         const { nama, rs_id, status } = req.body
 
