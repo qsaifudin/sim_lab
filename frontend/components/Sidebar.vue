@@ -9,11 +9,11 @@
       color="#328F6C"
     >
       <v-layout wrap>
-        <v-list-item-avatar>
+        <v-list-item-icon>
           <v-btn icon color="#FFFFFF" @click.stop="mini = !mini">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
-        </v-list-item-avatar>
+        </v-list-item-icon>
 
         <v-list nav>
           <template v-for="(item, index) in items">

@@ -147,10 +147,7 @@ export default {
     dialog: false,
     dialogDelete: false,
     search: '',
-    nameRules: [
-      (v) => !!v || 'Name is required',
-      (v) => v.length <= 10 || 'Name must be less than 10 characters',
-    ],
+    nameRules: [(v) => !!v || 'Name is required'],
     statusRules: [(v) => !!v || 'Status is required'],
     headers: [
       { text: 'No', value: 'index' },
@@ -179,7 +176,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Category' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Category' : 'Edit Data Category'
     },
   },
 

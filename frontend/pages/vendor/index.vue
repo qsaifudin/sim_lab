@@ -176,7 +176,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Data Vendor'
     },
   },
 
