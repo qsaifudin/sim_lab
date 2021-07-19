@@ -10,14 +10,8 @@ const sequelize = new Sequelize(
     config.PASSWORD, {
         host: config.HOST,
         dialect: config.dialect,
-        // 'lims_adamlabs',
-        // 'postgres',
-        // 'postgres', {
-        //     host: 'localhost',
-        //     dialect: 'postgres',
         operatorsAliases: 0,
         logging: 0,
-        port: 5432,
         define: {
             freezeTableName: 1
         },
@@ -28,24 +22,6 @@ const sequelize = new Sequelize(
             idle: config.pool.idle
         }
     })
-
-// const sequelize = new Sequelize("postgres://postgres:postgres@localhost/lims_adamlabs",
-//     {
-//         host: config.HOST,
-//         dialect: config.dialect,
-//         operatorsAliases: false,
-//         logging: false,
-//         define: {
-//             freezeTableName: true
-//         },
-//         pool: {
-//             max: config.pool.max,
-//             min: config.pool.min,
-//             acquire: config.pool.acquire,
-//             idle: config.pool.idle
-//         }
-//     }
-// )
 
 const db = {};
 db.Sequelize = Sequelize;

@@ -90,7 +90,7 @@ export default {
       }
       this.$refs.form.validate()
       await this.$axios
-        .post('signin', data, {
+        .post('api/auth/signin', data, {
           headers: {
             Accept: 'application/json',
           },

@@ -12,18 +12,22 @@ module.exports = {
                 )
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
             })
     },
-    getProvinsi: (req, res) => {
+    findProvinsi: (req, res) => {
         Provinsi.findOne({
-            where: {
-                id: req.params.id
-            }
-        })
+                where: {
+                    id: req.params.id
+                }
+            })
             .then(provinsi => {
                 if (!provinsi) {
-                    return res.status(404).json({ message: "provinsi Not found." })
+                    return res.status(404).json({
+                        message: "provinsi Not found."
+                    })
                 }
                 // res.json(provinsi)
                 // console.log(provinsi)
@@ -37,7 +41,9 @@ module.exports = {
 
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
             })
     },
     getAllKota: (req, res) => {
@@ -48,18 +54,22 @@ module.exports = {
                 )
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
             })
     },
-    getKota: (req, res) => {
+    findKota: (req, res) => {
         Kota.findOne({
-            where: {
-                id: req.params.id
-            }
-        })
+                where: {
+                    id: req.params.id
+                }
+            })
             .then(kota => {
                 if (!kota) {
-                    return res.status(404).json({ message: "kota Not found." })
+                    return res.status(404).json({
+                        message: "kota Not found."
+                    })
                 }
                 // res.json(provinsi)
                 // console.log(provinsi)
@@ -79,7 +89,9 @@ module.exports = {
 
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
             })
     },
     getAllKecamatan: (req, res) => {
@@ -90,7 +102,33 @@ module.exports = {
                 )
             })
             .catch(err => {
-                res.status(500).json({ message: err.message })
+                res.status(500).json({
+                    message: err.message
+                })
+            })
+    },
+    findKecamatan: (req, res) => {
+        Kecamatan.findOne({
+                where: {
+                    id: req.params.id
+                }
+            })
+            .then(kecamatan => {
+                if (!kecamatan) {
+                    return res.status(404).json({
+                        message: "Kecamatan Not found."
+                    })
+                }
+                res.status(200).json({
+                    id: kecamatan.id,
+                    nama: kecamatan.nama,
+                })
+
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message: err.message
+                })
             })
     },
 }

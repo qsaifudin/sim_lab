@@ -9,6 +9,62 @@ const {
 const jwt = require('jsonwebtoken');
 
 module.exports = {
+    cekLogin: (req, res) => {
+
+        if (req.body.refreshTokenData === undefined) {
+            return res.send({
+                message: "token empty"
+            })
+        }
+        RefreshToken.findOne({
+                where: {
+                    token: req.body.refreshTokenData
+                }
+            })
+            .then((data) => {
+                if (!data) {
+                    return res.send({
+                        message: "token not found"
+                    })
+                }
+                res.status(200).json({
+                    message: 'ok',
+                    dd: data
+                })
+            })
+            .catch((err) => {
+                res.json({
+                    message: err,
+                    dd: 'dddd'
+                })
+            })
+    },
+    getUser: (req, res) => {
+        let token = req.headers["token"];
+
+        if (!token) {
+            return res.status(403).send({
+                message: "No token provided!"
+            });
+        }
+
+        jwt.verify(token, config.secret, (err, decoded) => {
+            if (err) {
+                return catchError(err, res);
+            }
+            req.userId = decoded.id;
+            User.findOne({
+                    where: {
+                        id: req.userId
+                    }
+                })
+                .then(data => {
+                    res.status(200).send(
+                        data
+                    )
+                })
+        });
+    },
     signin: (req, res) => {
         if (req.body.username === undefined || req.body.username === undefined) {
             return res.status(404).json({

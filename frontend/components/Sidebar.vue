@@ -20,7 +20,7 @@
             <v-list-item
               :key="index"
               :to="`${item.link}`"
-              :title="item.title === 'Title' ? logout() : ''"
+              :title="item.title === 'Logout' ? 'logout() ' : ''"
             >
               <v-list-item-icon>
                 <v-icon color="#FFFFFF">{{ item.icon }}</v-icon>

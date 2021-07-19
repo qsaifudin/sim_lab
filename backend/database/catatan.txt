@@ -1,2 +1,3 @@
 Export to sql file 
 pg_dump -U postgres -h localhost sim_lab >> sim_lab.sql
+psql -h 192.168.100.50 -p 5432 -d lims_adamlabs -U postgres

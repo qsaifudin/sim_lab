@@ -191,8 +191,8 @@ CREATE TABLE public.rumah_sakit (
     kota character varying(255),
     kecamatan character varying(255),
     alamat character varying(255),
-    kategori_id numeric,
-    vendor_id numeric,
+    kategori_id integer,
+    vendor_id integer,
     status boolean DEFAULT false
 );
 
@@ -342,7 +342,10 @@ ALTER TABLE ONLY public.vendor ALTER COLUMN id SET DEFAULT nextval('public.vendo
 --
 
 COPY public.kategori_rs (id, nama, status) FROM stdin;
-1	dd	f
+2	RS Swasta 2	t
+3	RSUD 2	t
+1	Rumah Sakit Umum 2	t
+4	s	f
 \.
 
 
@@ -7794,13 +7797,7 @@ COPY public.provinsi (id, nama, status) FROM stdin;
 --
 
 COPY public."refreshToken" (id, token, "expiryDate", "userId") FROM stdin;
-64	0e26618d-4087-4453-8fab-ff0c39632a3a	2021-07-17 08:06:41.484+07	2
-65	424b1da0-22a5-42f6-98a3-e3efcadad2c5	2021-07-17 08:08:27.054+07	2
-67	b7176f7c-1f71-432e-a145-12f823c3d22d	2021-07-17 08:09:31.864+07	3
-68	3f716bd5-aebf-4bde-aad6-588ef3154455	2021-07-17 08:10:33.702+07	2
-69	c83f478c-e4b6-43e9-9998-e1028aa07a6a	2021-07-17 09:25:58.791+07	1
-70	559a2c97-2e3b-4c0c-8479-9aec282dc7f0	2021-07-17 09:38:54.65+07	1
-62	e457f0e9-4f02-4d9e-bd5f-bfb5eea40ede	2021-07-17 07:24:31.72+07	1
+89	9592453f-303f-4a19-9cd5-a452e3850bf0	2021-07-19 23:34:41.829+07	1
 \.
 
 
@@ -7848,7 +7845,7 @@ COPY public.vendor (id, nama, provinsi, kota, status) FROM stdin;
 -- Name: kategori_rs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.kategori_rs_id_seq', 1, true);
+SELECT pg_catalog.setval('public.kategori_rs_id_seq', 4, true);
 
 
 --
@@ -7862,7 +7859,7 @@ SELECT pg_catalog.setval('public.lab_id_seq', 1, false);
 -- Name: refreshToken_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."refreshToken_id_seq"', 70, true);
+SELECT pg_catalog.setval('public."refreshToken_id_seq"', 89, true);
 
 
 --
@@ -7980,6 +7977,22 @@ ALTER TABLE ONLY public.lab
 
 ALTER TABLE ONLY public."refreshToken"
     ADD CONSTRAINT "refreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: rumah_sakit rumah_sakit_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.rumah_sakit
+    ADD CONSTRAINT rumah_sakit_fk FOREIGN KEY (vendor_id) REFERENCES public.vendor(id);
+
+
+--
+-- Name: rumah_sakit rumah_sakit_kategori; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.rumah_sakit
+    ADD CONSTRAINT rumah_sakit_kategori FOREIGN KEY (kategori_id) REFERENCES public.kategori_rs(id);
 
 
 --

@@ -17,51 +17,21 @@ module.exports = app => {
     app.get(
         '/page/superadmin',
         [authJwt.verifyToken, authJwt.authSuperAdmin],
-        controller.superAdminBoard
-    )
+        controller.superAdminBoard)
     app.get(
         '/page/admin',
         [authJwt.verifyToken, authJwt.authAdmin, ],
-        controller.adminBoard
-    )
+        controller.adminBoard)
     app.get(
         '/page/vendor',
         [authJwt.verifyToken, authJwt.authVendor],
-        controller.vendorBoard
-    )
+        controller.vendorBoard)
     app.get(
         '/page/rs',
         [authJwt.verifyToken, authJwt.authRs],
-        controller.rsBoard
-    )
+        controller.rsBoard)
     app.get(
         '/page/lab',
         [authJwt.verifyToken, authJwt.authLab],
-        controller.labBoard
-    )
-    // app.get(
-    //     '/page/superadmin',
-    //     [authJwt.verifyToken, authJwt.isSuperAdmin],
-    //     controller.superAdminBoard
-    // )
-    // app.get(
-    //     '/page/admin',
-    //     [authJwt.verifyToken, authJwt.isAdmin, ],
-    //     controller.adminBoard
-    // )
-    // app.get(
-    //     '/page/vendor',
-    //     [authJwt.verifyToken, authJwt.isVendor],
-    //     controller.vendorBoard
-    // )
-    // app.get(
-    //     '/page/rs',
-    //     [authJwt.verifyToken, authJwt.isRs],
-    //     controller.rsBoard
-    // )
-    // app.get(
-    //     '/page/lab',
-    //     [authJwt.verifyToken, authJwt.isLab],
-    //     controller.labBoard
-    // )
+        controller.labBoard)
 }

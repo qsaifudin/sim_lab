@@ -48,5 +48,22 @@ export default {
   components: {
     Card,
   },
+  mounted() {
+    this.$axios
+      .get('api/auth/cek-login', {
+        refreshTokenData: localStorage.getItem('refreshToken'),
+      })
+      .then((res) => {
+        console.log(res)
+        if (res.data.message === 'ok') {
+          this.$router.push('/')
+        } else {
+          this.$router.push('login')
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
 }
 </script>

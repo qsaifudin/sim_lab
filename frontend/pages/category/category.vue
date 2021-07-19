@@ -109,6 +109,8 @@ import categoryDetail from '~/pages/category/categoryDetail'
 export default {
   components: { categoryDetail },
   data: () => ({
+    axios_data: [],
+    posts: [],
     dialog: false,
     dialogDelete: false,
     search: '',
@@ -136,7 +138,6 @@ export default {
       status: '',
     },
   }),
-
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Category' : 'Edit Item'
@@ -151,6 +152,16 @@ export default {
       val || this.closeDelete()
     },
   },
+  async mounted() {
+    this.axios_data = await this.$axios.$get('api/kategoriRs/')
+
+    this.posts = await fetch('http://localhost:3003/api/kategoriRs').then(
+      (res) => res.json()
+    )
+
+    console.log(this.axios_data)
+    console.log(this.axios_data[0].nama)
+  },
 
   created() {
     this.initialize()
@@ -162,9 +173,10 @@ export default {
       else return 'red'
     },
     initialize() {
+      // this.rs = this.$axios.$get('api/kategoriRs/')
       this.rs = [
         {
-          name: 'Rumah Sakit Umum',
+          name: 'this.axios_data[0].nama',
           id: 1,
           status: 'Aktif',
           action: '',
