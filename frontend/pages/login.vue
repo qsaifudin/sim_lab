@@ -27,7 +27,7 @@
                           :rules="usernameRules"
                           label="username"
                           name="username"
-                          prepend-inner-icon="mdi-email"
+                          prepend-inner-icon="mdi-account"
                           type="text"
                           color="#328F6C"
                         />

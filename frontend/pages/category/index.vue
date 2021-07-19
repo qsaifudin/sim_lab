@@ -1,11 +1,13 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="rumkit"
+    :items="rs"
     :search="search"
-    sort-by="id"
+    :search-s="search"
+    sort-by="no"
     class="elevation-1"
   >
+    <template #[`item.index`]="{ index }"> {{ index + 1 }} </template>
     <template #[`item.status`]="{ item }">
       <v-chip class="ma-2" :color="getColor(item.status)" dark>
         {{ item.status }}
@@ -13,21 +15,34 @@
     </template>
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Data Rumah Sakit</v-toolbar-title>
+        <v-toolbar-title>Category Rumah Sakit</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
+        <div class="mt-5">
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            filled
+            dense
+            outlined
+          ></v-text-field>
+        </div>
+        <v-spacer></v-spacer>
+        <div class="mt-5">
+          <v-select
+            v-model="search"
+            :items="['RSUD', 'RS UMUM', 'RS SWASTA']"
+            label="Category"
+            dense
+            outlined
+          ></v-select>
+        </div>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
             <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Rumah Sakit
+              Add Category
             </v-btn>
           </template>
           <v-card>
@@ -38,53 +53,41 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="12">
+                    <v-text-field label="no" dense outlined>
+                      <div v-for="(item, index) in items" :key="index">
+                        {{ index }}
+                      </div>
+                    </v-text-field>
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      :rules="nameRules"
+                      label="RS name"
+                      dense
+                      outlined
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <!-- <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.id"
                       label="Id"
+                      dense
+                      outlined
                     ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Nama RS"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.provinsi"
-                      label="Provinsi"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.kota"
-                      label="kota"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="8">
-                    <v-text-field
-                      v-model="editedItem.alamat"
-                      label="Alamat"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.category_id"
-                      label="Id Category"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.vendor_id"
-                      label="Id Vendor"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.status"
+                      :rules="statusRules"
                       label="Status"
-                    ></v-text-field>
+                      dense
+                      outlined
+                      required
+                    >
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -114,7 +117,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <rumkit-detail ref="rumkitDetail"></rumkit-detail>
+        <category-detail ref="categoryDetail"></category-detail>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -137,56 +140,43 @@
 </template>
 
 <script>
-import rumkitDetail from '~/pages/rs/rumkitDetail'
+import categoryDetail from '~/pages/category/categoryDetail'
 export default {
-  components: { rumkitDetail },
+  components: { categoryDetail },
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: '',
+    nameRules: [(v) => !!v || 'Name is required'],
+    statusRules: [(v) => !!v || 'Status is required'],
     headers: [
-      { text: 'Id', value: 'id' },
+      { text: 'No', value: 'index' },
       {
         text: 'Rumah Sakit',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'name',
       },
-      // { text: 'Provinsi', value: 'provinsi' },
-      // { text: 'Kota', value: 'kota' },
-      { text: 'Alamat', value: 'alamat' },
       { text: 'Status', value: 'status' },
-      // { text: 'Category_id', value: 'category_id' },
-      // { text: 'Vendor_id', value: 'vendor_id' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Actions', value: 'actions', sortable: true },
     ],
-    rumkit: [],
+    rs: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
+      no: '',
       name: '',
-      provinsi: '',
-      kota: '',
-      alamat: '',
-      category_id: '',
-      vendor_id: '',
       status: '',
     },
     defaultItem: {
-      id: '',
+      no: '',
       name: '',
-      provinsi: '',
-      kota: '',
-      alamat: '',
-      category_id: '',
-      vendor_id: '',
       status: '',
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Rumah Sakit Baru' : 'Edit Data RS'
+      return this.editedIndex === -1 ? 'New Category' : 'Edit Data Category'
     },
   },
 
@@ -209,48 +199,46 @@ export default {
       else return 'red'
     },
     initialize() {
-      this.rumkit = [
+      this.rs = [
         {
-          id: '1',
-          name: 'RS Undaan',
-          provinsi: 'Jawa Timur',
-          kota: 'Surabaya',
-          alamat: 'Jl Undaan Kulon No. 19, Peneleh',
-          category_id: '2',
-          vendor_id: '1',
+          no: 1,
+          name: 'Rumah Sakit Umum',
           status: 'Aktif',
+          action: '',
         },
         {
-          id: '2',
-          name: 'RSUD Dr.Soetomo',
-          provinsi: 'Jawa Timur',
-          kota: 'Surabaya',
-          alamat: 'Jl Mayjen Prof Dr.Moestopo No. 6-8',
-          category_id: '3',
-          vendor_id: '1',
+          no: 2,
+          name: 'RS Swasta',
+          status: 'Aktif',
+          action: '',
+        },
+        {
+          no: 3,
+          name: 'RSUD',
           status: 'Non-Aktif',
+          action: '',
         },
       ]
     },
 
     detailItem(item) {
-      this.$refs.rumkitDetail.open(item)
+      this.$refs.categoryDetail.open(item)
     },
 
     editItem(item) {
-      this.editedIndex = this.rumkit.indexOf(item)
+      this.editedIndex = this.rs.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.rumkit.indexOf(item)
+      this.editedIndex = this.rs.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.rumkit.splice(this.editedIndex, 1)
+      this.rs.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 
@@ -272,9 +260,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.rumkit[this.editedIndex], this.editedItem)
+        Object.assign(this.rs[this.editedIndex], this.editedItem)
       } else {
-        this.rumkit.push(this.editedItem)
+        this.rs.push(this.editedItem)
       }
       this.close()
     },

@@ -1,11 +1,12 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="rs"
+    :items="vendor"
     :search="search"
-    sort-by="id"
+    sort-by="no"
     class="elevation-1"
   >
+    <template #[`item.index`]="{ index }"> {{ index + 1 }} </template>
     <template #[`item.status`]="{ item }">
       <v-chip class="ma-2" :color="getColor(item.status)" dark>
         {{ item.status }}
@@ -13,21 +14,24 @@
     </template>
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Category Rumah Sakit</v-toolbar-title>
+        <v-toolbar-title>Data Vendor</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
+        <div class="mt-5">
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            filled
+            dense
+            outlined
+          ></v-text-field>
+        </div>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
             <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Category
+              Add Vendor
             </v-btn>
           </template>
           <v-card>
@@ -38,21 +42,41 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="RS name"
+                      :rules="nameRules"
+                      dense
+                      outlined
+                      label="Vendor name"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
+                      v-model="editedItem.provinsi"
+                      :rules="provinsiRules"
+                      dense
+                      outlined
+                      label="Provinsi"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.status" label="Status">
-                    </v-text-field>
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.kota"
+                      :rules="kotaRules"
+                      dense
+                      outlined
+                      label="Kota"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.status"
+                      :rules="statusRules"
+                      dense
+                      outlined
+                      label="Status"
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -82,7 +106,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <category-detail ref="categoryDetail"></category-detail>
+        <vendor-detail ref="vendorDetail"></vendor-detail>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -105,42 +129,54 @@
 </template>
 
 <script>
-import categoryDetail from '~/pages/category/categoryDetail'
+import vendorDetail from '~/pages/vendor/vendorDetail'
 export default {
-  components: { categoryDetail },
+  components: { vendorDetail },
   data: () => ({
-    axios_data: [],
-    posts: [],
     dialog: false,
     dialogDelete: false,
     search: '',
+    nameRules: [
+      (v) => !!v || 'Name is required',
+      (v) => v.length <= 10 || 'Name must be less than 10 characters',
+    ],
+    provinsiRules: [(v) => !!v || 'Provinsi is required'],
+    kotaRules: [(v) => !!v || 'Kota is required'],
+    statusRules: [(v) => !!v || 'Status is required'],
     headers: [
+      { text: 'No', value: 'index' },
       {
-        text: 'Rumah Sakit',
+        text: 'Vendor',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'name',
       },
-      { text: 'Id', value: 'id' },
+      { text: 'Provinsi', value: 'provinsi' },
+      { text: 'Kota', value: 'kota' },
       { text: 'Status', value: 'status' },
-      { text: 'Actions', value: 'actions', sortable: true },
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
-    rs: [],
+    vendor: [],
     editedIndex: -1,
     editedItem: {
+      no: '',
       name: '',
-      id: '',
+      provinsi: '',
+      kota: '',
       status: '',
     },
     defaultItem: {
+      no: '',
       name: '',
-      id: '',
+      provinsi: '',
+      kota: '',
       status: '',
     },
   }),
+
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Category' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Data Vendor'
     },
   },
 
@@ -151,16 +187,6 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete()
     },
-  },
-  async mounted() {
-    this.axios_data = await this.$axios.$get('api/kategoriRs/')
-
-    this.posts = await fetch('http://localhost:3003/api/kategoriRs').then(
-      (res) => res.json()
-    )
-
-    console.log(this.axios_data)
-    console.log(this.axios_data[0].nama)
   },
 
   created() {
@@ -173,47 +199,44 @@ export default {
       else return 'red'
     },
     initialize() {
-      // this.rs = this.$axios.$get('api/kategoriRs/')
-      this.rs = [
+      this.vendor = [
         {
-          name: 'this.axios_data[0].nama',
-          id: 1,
+          name: 'PT WRG',
+          no: 1,
+          provinsi: 'Jawa Timur',
+          kota: 'Surabaya',
           status: 'Aktif',
           action: '',
         },
         {
-          name: 'RS Swasta',
-          id: 2,
+          name: 'PT Adam Labs',
+          no: 2,
+          provinsi: 'Jawa Barat',
+          kota: 'Bogor',
           status: 'Aktif',
-          action: '',
-        },
-        {
-          name: 'RSUD',
-          id: 3,
-          status: 'Non-Aktif',
           action: '',
         },
       ]
     },
 
     detailItem(item) {
-      this.$refs.categoryDetail.open(item)
+      this.$refs.vendorDetail.open(item)
     },
 
     editItem(item) {
-      this.editedIndex = this.rs.indexOf(item)
+      this.editedIndex = this.vendor.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.rs.indexOf(item)
+      this.editedIndex = this.vendor.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.rs.splice(this.editedIndex, 1)
+      this.vendor.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 
@@ -235,9 +258,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.rs[this.editedIndex], this.editedItem)
+        Object.assign(this.vendor[this.editedIndex], this.editedItem)
       } else {
-        this.rs.push(this.editedItem)
+        this.vendor.push(this.editedItem)
       }
       this.close()
     },

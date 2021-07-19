@@ -61,7 +61,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <!-- <v-list-item>
           <v-list-item-icon>
             <v-icon large>mdi-apps</v-icon>
           </v-list-item-icon>
@@ -74,9 +74,9 @@
               v-text="detailItem.category_id"
             ></v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
 
-        <v-list-item>
+        <!-- <v-list-item>
           <v-list-item-icon>
             <v-icon large>mdi-account-group</v-icon>
           </v-list-item-icon>
@@ -89,7 +89,7 @@
               v-text="detailItem.vendor_id"
             ></v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
 
       <v-card-actions>
