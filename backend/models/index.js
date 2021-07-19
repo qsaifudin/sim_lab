@@ -60,6 +60,10 @@ db.kecamatan = require('../models/kecamatan.model')(sequelize, Sequelize);
 db.kategoriRs = require('../models/kategori_rs.model')(sequelize, Sequelize);
 db.refreshToken = require('../models/refreshToken.model')(sequelize, Sequelize);
 
+db.vendor = require('../models/vendor.model')(sequelize, Sequelize)
+db.lab = require('../models/lab.model')(sequelize, Sequelize)
+db.rumahsakit = require('../models/rumahsakit.model')(sequelize, Sequelize)
+
 // db.role.hasOne(db.user, {
 //     as: "users"
 // })
