@@ -1,11 +1,12 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="rumkit"
+    :items="vendor"
     :search="search"
-    sort-by="id"
+    sort-by="no"
     class="elevation-1"
   >
+    <template #[`item.index`]="{ index }"> {{ index + 1 }} </template>
     <template #[`item.status`]="{ item }">
       <v-chip class="ma-2" :color="getColor(item.status)" dark>
         {{ item.status }}
@@ -13,7 +14,7 @@
     </template>
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Data Rumah Sakit</v-toolbar-title>
+        <v-toolbar-title>Data Vendor</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <div class="mt-5">
@@ -30,7 +31,7 @@
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
             <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Rumah Sakit
+              Add Vendor
             </v-btn>
           </template>
           <v-card>
@@ -41,60 +42,44 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.id"
-                      label="Id"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Nama RS"
-                      required
+                      :rules="nameRules"
+                      dense
+                      outlined
+                      label="Vendor name"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.provinsi"
+                      :rules="provinsiRules"
+                      dense
+                      outlined
                       label="Provinsi"
-                      required
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.kota"
-                      label="kota"
-                      aria-required="true"
+                      :rules="kotaRules"
+                      dense
+                      outlined
+                      label="Kota"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="8">
-                    <v-text-field
-                      v-model="editedItem.alamat"
-                      label="Alamat"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.category_id"
-                      label="Id Category"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.vendor_id"
-                      label="Id Vendor"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.status"
+                      :rules="statusRules"
+                      dense
+                      outlined
                       label="Status"
                     ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
-              <small>*indicates required field</small>
             </v-card-text>
 
             <v-card-actions>
@@ -121,7 +106,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <rumkit-detail ref="rumkitDetail"></rumkit-detail>
+        <vendor-detail ref="vendorDetail"></vendor-detail>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -144,56 +129,54 @@
 </template>
 
 <script>
-import rumkitDetail from '~/pages/rs/rumkitDetail'
+import vendorDetail from '~/pages/vendor/vendorDetail'
 export default {
-  components: { rumkitDetail },
+  components: { vendorDetail },
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: '',
+    nameRules: [
+      (v) => !!v || 'Name is required',
+      (v) => v.length <= 10 || 'Name must be less than 10 characters',
+    ],
+    provinsiRules: [(v) => !!v || 'Provinsi is required'],
+    kotaRules: [(v) => !!v || 'Kota is required'],
+    statusRules: [(v) => !!v || 'Status is required'],
     headers: [
-      { text: 'Id', value: 'id' },
+      { text: 'No', value: 'index' },
       {
-        text: 'Rumah Sakit',
+        text: 'Vendor',
         align: 'start',
         sortable: true,
         value: 'name',
       },
-      // { text: 'Provinsi', value: 'provinsi' },
-      // { text: 'Kota', value: 'kota' },
-      { text: 'Alamat', value: 'alamat' },
+      { text: 'Provinsi', value: 'provinsi' },
+      { text: 'Kota', value: 'kota' },
       { text: 'Status', value: 'status' },
-      // { text: 'Category_id', value: 'category_id' },
-      // { text: 'Vendor_id', value: 'vendor_id' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
-    rumkit: [],
+    vendor: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
+      no: '',
       name: '',
       provinsi: '',
       kota: '',
-      alamat: '',
-      category_id: '',
-      vendor_id: '',
       status: '',
     },
     defaultItem: {
-      id: '',
+      no: '',
       name: '',
       provinsi: '',
       kota: '',
-      alamat: '',
-      category_id: '',
-      vendor_id: '',
       status: '',
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Rumah Sakit Baru' : 'Edit Data RS'
+      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Item'
     },
   },
 
@@ -216,48 +199,44 @@ export default {
       else return 'red'
     },
     initialize() {
-      this.rumkit = [
+      this.vendor = [
         {
-          id: '1',
-          name: 'RS Undaan',
+          name: 'PT WRG',
+          no: 1,
           provinsi: 'Jawa Timur',
           kota: 'Surabaya',
-          alamat: 'Jl Undaan Kulon No. 19, Peneleh',
-          category_id: '2',
-          vendor_id: '1',
           status: 'Aktif',
+          action: '',
         },
         {
-          id: '2',
-          name: 'RSUD Dr.Soetomo',
-          provinsi: 'Jawa Timur',
-          kota: 'Surabaya',
-          alamat: 'Jl Mayjen Prof Dr.Moestopo No. 6-8',
-          category_id: '3',
-          vendor_id: '1',
-          status: 'Non-Aktif',
+          name: 'PT Adam Labs',
+          no: 2,
+          provinsi: 'Jawa Barat',
+          kota: 'Bogor',
+          status: 'Aktif',
+          action: '',
         },
       ]
     },
 
     detailItem(item) {
-      this.$refs.rumkitDetail.open(item)
+      this.$refs.vendorDetail.open(item)
     },
 
     editItem(item) {
-      this.editedIndex = this.rumkit.indexOf(item)
+      this.editedIndex = this.vendor.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.rumkit.indexOf(item)
+      this.editedIndex = this.vendor.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.rumkit.splice(this.editedIndex, 1)
+      this.vendor.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 
@@ -279,9 +258,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.rumkit[this.editedIndex], this.editedItem)
+        Object.assign(this.vendor[this.editedIndex], this.editedItem)
       } else {
-        this.rumkit.push(this.editedItem)
+        this.vendor.push(this.editedItem)
       }
       this.close()
     },

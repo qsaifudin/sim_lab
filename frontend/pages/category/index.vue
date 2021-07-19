@@ -4,9 +4,10 @@
     :items="rs"
     :search="search"
     :search-s="search"
-    sort-by="id"
+    sort-by="no"
     class="elevation-1"
   >
+    <template #[`item.index`]="{ index }"> {{ index + 1 }} </template>
     <template #[`item.status`]="{ item }">
       <v-chip class="ma-2" :color="getColor(item.status)" dark>
         {{ item.status }}
@@ -52,25 +53,38 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="12">
+                    <v-text-field label="no" dense outlined>
+                      <div v-for="(item, index) in items" :key="index">
+                        {{ index }}
+                      </div>
+                    </v-text-field>
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.name"
                       :rules="nameRules"
                       label="RS name"
+                      dense
+                      outlined
                       required
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.id"
                       label="Id"
+                      dense
+                      outlined
                     ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.status"
                       :rules="statusRules"
                       label="Status"
+                      dense
+                      outlined
                       required
                     >
                     </v-text-field>
@@ -139,26 +153,26 @@ export default {
     ],
     statusRules: [(v) => !!v || 'Status is required'],
     headers: [
+      { text: 'No', value: 'index' },
       {
         text: 'Rumah Sakit',
         align: 'start',
         sortable: false,
         value: 'name',
       },
-      { text: 'Id', value: 'id' },
       { text: 'Status', value: 'status' },
       { text: 'Actions', value: 'actions', sortable: true },
     ],
     rs: [],
     editedIndex: -1,
     editedItem: {
+      no: '',
       name: '',
-      id: '',
       status: '',
     },
     defaultItem: {
+      no: '',
       name: '',
-      id: '',
       status: '',
     },
   }),
@@ -190,20 +204,20 @@ export default {
     initialize() {
       this.rs = [
         {
+          no: 1,
           name: 'Rumah Sakit Umum',
-          id: 1,
           status: 'Aktif',
           action: '',
         },
         {
+          no: 2,
           name: 'RS Swasta',
-          id: 2,
           status: 'Aktif',
           action: '',
         },
         {
+          no: 3,
           name: 'RSUD',
-          id: 3,
           status: 'Non-Aktif',
           action: '',
         },

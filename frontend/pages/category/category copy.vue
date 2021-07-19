@@ -1,9 +1,10 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="vendor"
+    :items="rs"
     :search="search"
-    sort-by="id"
+    :search-s="search"
+    sort-by="no"
     class="elevation-1"
   >
     <template #[`item.status`]="{ item }">
@@ -13,7 +14,7 @@
     </template>
     <template #top>
       <v-toolbar flat>
-        <v-toolbar-title>Data Vendor</v-toolbar-title>
+        <v-toolbar-title>Category Rumah Sakit</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <div class="mt-5">
@@ -27,10 +28,20 @@
           ></v-text-field>
         </div>
         <v-spacer></v-spacer>
+        <div class="mt-5">
+          <v-select
+            v-model="search"
+            :items="['RSUD', 'RS UMUM', 'RS SWASTA']"
+            label="Category"
+            dense
+            outlined
+          ></v-select>
+        </div>
+        <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template #activator="{ on, attrs }">
             <v-btn color="#4337CB" dark class="mb-2" v-bind="attrs" v-on="on">
-              Add Vendor
+              Add Category
             </v-btn>
           </template>
           <v-card>
@@ -41,35 +52,41 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="12">
+                    <v-text-field label="no" dense outlined>
+                      <div v-for="(item, index) in items" :key="index">
+                        {{ index }}
+                      </div>
+                    </v-text-field>
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      :rules="nameRules"
+                      label="RS name"
+                      dense
+                      outlined
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <!-- <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.id"
                       label="Id"
+                      dense
+                      outlined
                     ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Vendor name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.provinsi"
-                      label="Provinsi"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.kota"
-                      label="Kota"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  </v-col> -->
+                  <v-col cols="12" sm="6" md="12">
                     <v-text-field
                       v-model="editedItem.status"
+                      :rules="statusRules"
                       label="Status"
-                    ></v-text-field>
+                      dense
+                      outlined
+                      required
+                    >
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -99,7 +116,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <vendor-detail ref="vendorDetail"></vendor-detail>
+        <category-detail ref="categoryDetail"></category-detail>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -122,47 +139,46 @@
 </template>
 
 <script>
-import vendorDetail from '~/pages/vendor/vendorDetail'
+import categoryDetail from '~/pages/category/categoryDetail'
 export default {
-  components: { vendorDetail },
+  components: { categoryDetail },
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: '',
+    nameRules: [
+      (v) => !!v || 'Name is required',
+      (v) => v.length <= 10 || 'Name must be less than 10 characters',
+    ],
+    statusRules: [(v) => !!v || 'Status is required'],
     headers: [
-      { text: 'Id', value: 'id' },
+      { text: 'No', value: 'no' },
       {
-        text: 'Vendor',
+        text: 'Rumah Sakit',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'name',
       },
-      { text: 'Provinsi', value: 'provinsi' },
-      { text: 'Kota', value: 'kota' },
       { text: 'Status', value: 'status' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Actions', value: 'actions', sortable: true },
     ],
-    vendor: [],
+    rs: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
+      no: '',
       name: '',
-      provinsi: '',
-      kota: '',
       status: '',
     },
     defaultItem: {
-      id: '',
+      no: '',
       name: '',
-      provinsi: '',
-      kota: '',
       status: '',
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Vendor' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Category' : 'Edit Item'
     },
   },
 
@@ -185,44 +201,46 @@ export default {
       else return 'red'
     },
     initialize() {
-      this.vendor = [
+      this.rs = [
         {
-          name: 'PT WRG',
-          id: 1,
-          provinsi: 'Jawa Timur',
-          kota: 'Surabaya',
+          no: 1,
+          name: 'Rumah Sakit Umum',
           status: 'Aktif',
           action: '',
         },
         {
-          name: 'PT Adam Labs',
-          id: 2,
-          provinsi: 'Jawa Barat',
-          kota: 'Bogor',
+          no: 2,
+          name: 'RS Swasta',
           status: 'Aktif',
+          action: '',
+        },
+        {
+          no: 3,
+          name: 'RSUD',
+          status: 'Non-Aktif',
           action: '',
         },
       ]
     },
 
     detailItem(item) {
-      this.$refs.vendorDetail.open(item)
+      this.$refs.categoryDetail.open(item)
     },
 
     editItem(item) {
-      this.editedIndex = this.vendor.indexOf(item)
+      this.editedIndex = this.rs.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.vendor.indexOf(item)
+      this.editedIndex = this.rs.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.vendor.splice(this.editedIndex, 1)
+      this.rs.splice(this.editedIndex, 1)
       this.closeDelete()
     },
 
@@ -244,9 +262,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.vendor[this.editedIndex], this.editedItem)
+        Object.assign(this.rs[this.editedIndex], this.editedItem)
       } else {
-        this.vendor.push(this.editedItem)
+        this.rs.push(this.editedItem)
       }
       this.close()
     },

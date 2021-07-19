@@ -73,12 +73,12 @@ export default {
           title: 'Dashboard',
         },
         {
-          link: '/category/category',
+          link: '/category',
           icon: 'mdi-buffer',
           title: 'Datamaster Category',
         },
         {
-          link: '/rs/rumkit',
+          link: '/rs',
           icon: 'mdi-hospital-building',
           title: 'Datamaster Rumah Sakit',
         },
@@ -88,7 +88,7 @@ export default {
           title: 'Datamaster Laboratorium',
         },
         {
-          link: '/vendor/vendor',
+          link: '/vendor',
           icon: 'mdi-account-group',
           title: 'Datamaster Vendor',
         },
